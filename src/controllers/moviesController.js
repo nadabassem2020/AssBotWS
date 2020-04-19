@@ -63,7 +63,7 @@ function recommendationsMovies(req, res, err) {
                         date: jsonObj['results'][1]['release_date'],
                         language: jsonObj['results'][1]['original_language'],
                     }];
-                res.json(jsonObj);
+                res.json(output);
             } catch(e) {
                 console.log("Parse error: ", e);
                 res.json(e);

@@ -24,7 +24,7 @@ function topHeadLines(req, res, err) {
     }).on('error', function(e){
           console.log("Got an error: ", e);
           res.json(e);
-          
+
     });
 }
 
