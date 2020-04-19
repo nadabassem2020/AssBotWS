@@ -1,0 +1,26 @@
+{
+  "name": "AssBotWS",
+  "version": "1.0.0",
+  "description": "Node.js web service for Assigntant bot to make APIs calls to get certain data.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lwx-amr/AssBotWS"
+  },
+  "keywords": [
+    "Node.js",
+    "Express.js"
+  ],
+  "author": "NS Team",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lwx-amr/AssBotWS/issues"
+  },
+  "homepage": "https://github.com/lwx-amr/AssBotWS#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
