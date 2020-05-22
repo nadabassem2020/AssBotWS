@@ -17,9 +17,9 @@
   "author": "NS Team",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/lwx-amr/AssBotWS/issues"
+    "url": "https://github.com/nadabassem2020/AssBotWS/issues"
   },
-  "homepage": "https://github.com/lwx-amr/AssBotWS#readme",
+  "homepage": "https://github.com/nadabassem2020/AssBotWS#readme",
   "dependencies": {
     "express": "^4.17.1"
   }
