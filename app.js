@@ -4,6 +4,9 @@ const moviesRoute = require('./src/routes/moviesRoute');
 const curerencyRoute = require('./src/routes/currencyRoute');
 const weatherRoute = require('./src/routes/weatherRoute');
 const musicRoute = require('./src/routes/musicRoute');
+const foodCalories = require('./src/routes/foodCalorieRoute');
+const googleTranslate = require('./src/routes/googleTranslateRoute');
+const airportSearch = require('./src/routes/airportSearchRoute');
 
 // Initialize app
 const app = express();
@@ -24,6 +27,9 @@ moviesRoute(app);
 curerencyRoute(app);
 weatherRoute(app);
 musicRoute(app);
+foodCalories(app);
+googleTranslate(app);
+airportSearch(app);
 
 // Add port to start server
 app.listen(port, function(err){
