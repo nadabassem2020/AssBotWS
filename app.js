@@ -7,6 +7,8 @@ const musicRoute = require('./src/routes/musicRoute');
 const foodCalories = require('./src/routes/foodCalorieRoute');
 const googleTranslate = require('./src/routes/googleTranslateRoute');
 const airportSearch = require('./src/routes/airportSearchRoute');
+const freeDownloader = require('./src/routes/freeDownloaderRoute');
+const worldClock = require ('./src/routes/worldClockRoute');
 
 // Initialize app
 const app = express();
@@ -30,7 +32,8 @@ musicRoute(app);
 foodCalories(app);
 googleTranslate(app);
 airportSearch(app);
-
+freeDownloader(app);
+worldClock(app);
 // Add port to start server
 app.listen(port, function(err){
     if(err)
