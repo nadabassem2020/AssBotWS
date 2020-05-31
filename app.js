@@ -9,6 +9,8 @@ const googleTranslate = require('./src/routes/googleTranslateRoute');
 const airportSearch = require('./src/routes/airportSearchRoute');
 const freeDownloader = require('./src/routes/freeDownloaderRoute');
 const worldClock = require ('./src/routes/worldClockRoute');
+const coronavirusStatistics = require('./src/routes/coronavirusStatisticsRoute');
+const Joke = require ('./src/routes/JokeRoute');
 
 // Initialize app
 const app = express();
@@ -34,6 +36,9 @@ googleTranslate(app);
 airportSearch(app);
 freeDownloader(app);
 worldClock(app);
+coronavirusStatistics(app);
+Joke(app);
+
 // Add port to start server
 app.listen(port, function(err){
     if(err)

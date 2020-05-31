@@ -5,7 +5,7 @@ function freeDownloader(req,res, err) {
     "method": "GET",
     "hostname": "free-mp3-mp4-youtube.p.rapidapi.com",
     "port": null,
-    "path": "/medPORJ8KO0/MP3/spinner/2196f3/100/box-button/2196f3/tiny-button/Download/FFFFFF/yes/FFFFFF/none",
+    "path": "/3UTTdgO4FgE/MP3/spinner/2196f3/100/box-button/2196f3/tiny-button/Download/FFFFFF/yes/FFFFFF/none",
     "headers": {
       "x-rapidapi-host": "free-mp3-mp4-youtube.p.rapidapi.com",
       "x-rapidapi-key": "3a838069damshc76e686f8396114p159690jsn32dc6e59ce20",
@@ -35,4 +35,4 @@ function freeDownloader(req,res, err) {
   });
 };
 
-module.exports = freeDownloader;
+module.exports = {freeDownloader};
