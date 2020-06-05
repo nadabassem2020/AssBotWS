@@ -11,6 +11,8 @@ const freeDownloader = require('./src/routes/freeDownloaderRoute');
 const worldClock = require ('./src/routes/worldClockRoute');
 const coronavirusStatistics = require('./src/routes/coronavirusStatisticsRoute');
 const Joke = require ('./src/routes/JokeRoute');
+const Calculator = require ('./src/routes/CalculatorRoute');
+const Fork = require ('./src/routes/ForkRoute');
 
 // Initialize app
 const app = express();
@@ -38,6 +40,8 @@ freeDownloader(app);
 worldClock(app);
 coronavirusStatistics(app);
 Joke(app);
+Calculator(app);
+Fork(app);
 
 // Add port to start server
 app.listen(port, function(err){

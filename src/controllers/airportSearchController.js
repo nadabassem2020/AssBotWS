@@ -1,18 +1,20 @@
 var https = require("https");
 
 function airportSearchByName(req,res, err) {
+  var text = req.query.q;
+
   var options = {
     "method": "GET",
-    "hostname": "airport-info.p.rapidapi.com",
+    "hostname": "cometari-airportsfinder-v1.p.rapidapi.com",
     "port": null,
-    "path": "/airport",
+    "path": "/api/airports/by-text?text="+text+"",
     "headers": {
-      "x-rapidapi-host": "airport-info.p.rapidapi.com",
+      "x-rapidapi-host": "cometari-airportsfinder-v1.p.rapidapi.com",
       "x-rapidapi-key": "3a838069damshc76e686f8396114p159690jsn32dc6e59ce20",
       "useQueryString": true
     }
   };
-
+  
   https.get(options, function(response){
     var body = '';
     response.on('data', function(chunk){

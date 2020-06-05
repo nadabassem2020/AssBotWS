@@ -1,14 +1,14 @@
 var https = require("https");
 
-function coronavirusStatistics(req,res, err) {
+function getFork(req,res, err) {
   var text = req.query.q;
   var options = {
     "method": "GET",
-    "hostname": "covid-19-coronavirus-statistics.p.rapidapi.com",
+    "hostname": "thefork.p.rapidapi.com",
     "port": null,
-    "path": "/v1/total?country="+text,
+    "path": "/restaurants/list?pageNumber=1&queryPlaceValueCoordinatesLongitude=9.189982&pageSize=10&queryPlaceValueCoordinatesLatitude=45.4642035&queryPlaceValueCityId=348156",
     "headers": {
-      "x-rapidapi-host": "covid-19-coronavirus-statistics.p.rapidapi.com",
+      "x-rapidapi-host": "thefork.p.rapidapi.com",
       "x-rapidapi-key": "3a838069damshc76e686f8396114p159690jsn32dc6e59ce20",
       "useQueryString": true
     }
@@ -35,4 +35,4 @@ function coronavirusStatistics(req,res, err) {
   });
 };
 
-module.exports = {coronavirusStatistics};
+module.exports = {getFork};
