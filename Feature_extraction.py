@@ -19,6 +19,7 @@ from sklearn import tree
 from collections import Counter
 from wit import Wit
 from pandas import DataFrame
+import json
 
 from ctypes import string_at
 from sys import getsizeof
@@ -38,6 +39,20 @@ FP = FeatPar()
 def resp_test(messsage):
     resp = client.message(messsage)
     print(resp)
+
+def lang_code(lang):
+    f = open('E:\College\Y4 T2\GP\env\messenger bot\AssBotWS-master\langs.json')
+    langs = json.load(f)
+    try:
+        for i in range(184):
+            if langs[i]['name'].lower() == lang.lower():
+                return langs[i]['code']
+                continue
+    except:
+        print('couldnt get language abriv')
+        return -1
+    # if 'arabic' in langs:
+    #     print(langs['code'])
 
 def f1(resp):
     try:
@@ -72,7 +87,7 @@ def f2(resp):
 def f3(resp):
     try:
         feature = resp['entities']['intent'][0]['value']
-        params = resp['entities']['creative_work'][0]['value']
+        paramsq = resp['entities']['creative_work'][0]['value']
         FP.feature_.append(feature)
         FP.params_.append(params)
 
@@ -131,9 +146,106 @@ def f6(resp):
     except:
         return -1
 
+def f7(resp):
+    try:
+        feature = 'music'
+        params = resp['entities']['notable_person'][0]['value']['name']
+        FP.feature_.append(feature)
+        FP.feature_.append(params)
+
+        FP.feat_par_dict = {
+                     'feature': FP.feature_,
+                     'params': FP.params_
+                    }
+        return FP.feat_par_dict
+    except:
+        return -1
+
+def f8(resp):
+    try:
+        feature = resp['entities']['intent'][0]['value']
+        param   = resp['entities']['food'][0]['value']
+        FP.feature_.append(feature)
+        FP.params_.append(param)
+
+        FP.feat_par_dict = {
+                     'feature': FP.feature_,
+                     'params': FP.params_
+                    }
+        return FP.feat_par_dict
+    except:
+        return -1
+
+def f10(resp):
+    try:
+        feature = resp['entities']['intent'][0]['value']
+        param   = resp['entities']['location'][0]['value']
+        FP.feature_.append(feature)
+        FP.params_.append(param)
+
+        FP.feat_par_dict = {
+                     'feature': FP.feature_,
+                     'params': FP.params_
+                    }
+        return FP.feat_par_dict
+    except:
+        return -1
+
+def f9(resp):
+    try:
+        feature = resp['entities']['intent'][0]['value']
+        param1   = resp['entities']['location'][0]['value']
+        param2   = resp['entities']['sentence'][0]['value']
+        
+        FP.feature_.append(feature)
+        FP.params_.append(lang_code(param1))
+        FP.params_.append(param2)
+
+        FP.feat_par_dict = {
+                     'feature': FP.feature_,
+                     'params': FP.params_
+                    }
+        return FP.feat_par_dict
+    except:
+        return -1
+
+def f11(resp):
+    try:
+        feature = resp['entities']['intent'][0]['value']
+        param1   = resp['entities']['targetlang'][0]['value']
+        param2   = resp['entities']['sentence'][0]['value']
+        
+        FP.feature_.append(feature)
+        FP.params_.append(lang_code(param1))
+        FP.params_.append(param2)
+
+        FP.feat_par_dict = {
+                     'feature': FP.feature_,
+                     'params': FP.params_
+                    }
+        return FP.feat_par_dict
+    except:
+        return -1
+
+def f12(resp):
+    try:
+        feature = resp['entities']['intent'][0]['value']
+        param   = resp['entities']['food'][0]['value']
+        FP.feature_.append(feature)
+        FP.params_.append(param)
+
+        FP.feat_par_dict = {
+                     'feature': FP.feature_,
+                     'params': FP.params_
+                    }
+        return FP.feat_par_dict
+    except:
+        return -1
+
 def wit_ne(messsage):
     resp = client.message(messsage)
-    
+    print(resp)
+
     if f1(resp) != -1:
         return(FP.feat_par_dict)
          
@@ -151,6 +263,25 @@ def wit_ne(messsage):
 
     elif f6(resp) != -1:
         return(FP.feat_par_dict)
+
+    elif f7(resp) != -1:
+        return(FP.feat_par_dict)
+
+    elif f8(resp) != -1:
+        return(FP.feat_par_dict)
+
+    elif f9(resp) != -1:
+        return(FP.feat_par_dict)
+
+    elif f10(resp) != -1:
+        return(FP.feat_par_dict)
+
+    elif f11(resp) != -1:
+        return(FP.feat_par_dict)
+
+    elif f12(resp) != -1:
+        return(FP.feat_par_dict)
+
     else:
         print('EVERY THING FAILED!!!!')
         return -1
@@ -207,16 +338,22 @@ def ext_feature(NV):
 
 
 def param_plot(dict):
-    matcher = NodeMatcher(graph)
-    matched_nodes = {}
+    FP.feature_ = []
+    FP.params_ = []
+    FP.feat_par_dict = {}
     
     feature_value = dict['feature'][0]
     print("Feature extraction file, param plot function " + feature_value)
-    query = 'match(n {feature:\'%s\'}) return n' % feature_value 
+    print('PARAMS ARE ')
+    print(dict['params'])
 
     for i in range(len(dict['params'])):
         a = Node(dict['params'][i], feature = dict['feature'][0], type = 'parameter')
         graph.create(a)
+
+    FP.feature_ = []
+    FP.params_ = []
+    FP.feat_par_dict = {}
     print( dict['params'])
     print( FP.feat_par_dict)
 
@@ -229,14 +366,14 @@ def param_plot(dict):
 
     #print(matched_nodes)
     
-def clear(dict):
-    dict['params'] = []
-    dict['feature'] = []
+def clear(array):
+    array = []
 
-    
+def clearDic(dict):
+    dict = {}
 
-
-#resp_test('where can i watch star wars?')
-param_plot(wit_ne("send me some songs for tom odell"))
+# resp_test('calories in pizza')
+# print(wit_ne('puzzle in Hindustani'))
+param_plot(wit_ne("calories in pizza"))
 # a = Node('dummy', feature = 'music', type = 'parameter')
 # graph.create(a)
