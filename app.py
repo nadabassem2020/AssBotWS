@@ -49,7 +49,8 @@ def webhook():
 						messaging_text = 'no-text'
 					response = ''
 					try:
-						#Feature_extraction.clear(Feature_extraction.FP.feat_par_dict)	
+						Feature_extraction.clear(Feature_extraction.FP.feature_)
+						Feature_extraction.clear(Feature_extraction.FP.params_)	
 						Feature_extraction.param_plot(Feature_extraction.wit_ne(messaging_text))
 						call(["node", "E:\College\Y4 T2\GP\env\messenger bot\AssBotWS-master/app.js"]) 
 						response = 'Everything is fine...'
@@ -58,7 +59,7 @@ def webhook():
 					
 					bot.send_text_message(sender_id, response)
 					Feature_extraction.clear(Feature_extraction.FP.feat_par_dict)
-			clear_nodes()	
+					clear_nodes()	
 					
 					
 					
