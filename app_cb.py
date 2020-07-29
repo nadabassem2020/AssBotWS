@@ -1,3 +1,4 @@
+# This file handles the chatbot and reads the JSON file apiresp.json and runs the feature extraction code then sends it to the user
 import os
 import sys
 import Feature_extraction
