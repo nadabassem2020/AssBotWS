@@ -1,3 +1,4 @@
+//This file reads from the database and then send a request to the APIs then sends the response to a JSON file apiresp.json
 const express = require('express');
 const newsRoute = require('./src/routes/newsRoute');
 const moviesRoute = require('./src/routes/moviesRoute');
