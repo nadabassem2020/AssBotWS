@@ -20,6 +20,7 @@ from collections import Counter
 from wit import Wit
 from pandas import DataFrame
 import json
+import python_currency_dict
 
 from ctypes import string_at
 from sys import getsizeof
@@ -242,6 +243,21 @@ def f12(resp):
     except:
         return -1
 
+# def f13(resp):
+#     try:
+#         feature = resp['entities']['intent'][0]['value']
+#         param   = resp['entities']['food'][0]['value']
+#         FP.feature_.append(feature)
+#         FP.params_.append(param)
+
+#         FP.feat_par_dict = {
+#                      'feature': FP.feature_,
+#                      'params': FP.params_
+#                     }
+#         return FP.feat_par_dict
+#     except:
+#         return -1
+
 def wit_ne(messsage):
     resp = client.message(messsage)
     print(resp)
@@ -372,8 +388,15 @@ def clear(array):
 def clearDic(dict):
     dict = {}
 
-# resp_test('calories in pizza')
+resp_test('send for amr diab')
 # print(wit_ne('puzzle in Hindustani'))
-param_plot(wit_ne("calories in pizza"))
+#param_plot(wit_ne("calories in pizza"))
 # a = Node('dummy', feature = 'music', type = 'parameter')
 # graph.create(a)
+
+# def get_currencycode(dict, currencyname):
+#     for currencycode, currencyvalue in dict.items():
+#         if currencyname == currencyvalue:
+#             print(currencycode)
+
+# get_currencycode(python_currency_dict.currency_list, "Egypt Pound")
