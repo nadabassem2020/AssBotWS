@@ -89,6 +89,13 @@ session
                 console.log('we dont have enough data about this language');
 
             }
+        } else if (featureArr[0]['feature'] == 'airport') {
+            try {
+                return (airport_feature(labelArr, featureArr));
+            } catch {
+                console.log('we dont have enough data about this language');
+
+            }
         }
 
         // else if (featureArr[0]['feature'] == 'music'){
@@ -231,17 +238,43 @@ function calorie_feature(labelArr, featureArr) {
     });
 }
 
-function parse_translate(Object) {
-    console.log(Object['data']);
+function airport_feature(labelArr, featureArr) {
+    // Asuming that our service is running on https://www.ourservice.com
+    // This is how we can access our music-search feature in any node.js app
+    // Url as in documentation file 
+    var par = labelArr[0]['label'][0];
 
+    // http://localhost:3000/foodCalorie/search?q="text
+
+    var url = `http://localhost:3000/airportSearch/search?q=${par}`.replace(/\s/g, '');
+    http.get(url, function(response) {
+        var body = '';
+        response.on('data', function(chunk) {
+            body += chunk;
+        });
+        response.on('end', function() {
+            var jsonObj = JSON.parse(body);
+            parse_airport(jsonObj);
+            process.exit(1)
+
+            // Now data is ready in json obj use it whatever you want
+        });
+    }).on('error', function(e) {
+        console.log("error in API: ", e);
+        process.exit(1)
+    });
+}
+
+function parse_airport(Object) {
+
+    console.log(Object);
     // try {
-
-    //     // random_track_index = Math.floor(Math.random() * Object['data'].length + 1);
-    //     // console.log(Object['data'][random_track_index]['title']);
-    //     // console.log(Object['data'][random_track_index]['link']);
+    //     random_track_index = Math.floor(Math.random() * Object['data'].length + 1);
+    //     console.log(Object['data'][random_track_index]['title']);
+    //     console.log(Object['data'][random_track_index]['link']);
 
     // } catch {
-    //     console.log('Sorry, e cant find enough data for the language');
+    //     console.log('Sorry, e cant find enough data for the artist');
     // }
 
     // var obj = {
@@ -258,6 +291,34 @@ function parse_translate(Object) {
     // function finished(err) {
     //     console.log('ALL SET');
     // }
+}
+
+
+function parse_translate(Object) {
+    // console.log(Object['data']['translations'][0]['translatedText']);
+
+    try {
+        console.log(Object['data']['translations'][0]['translatedText']);
+        // random_track_index = Math.floor(Math.random() * Object['data'].length + 1);
+        // console.log(Object['data'][random_track_index]['title']);
+        // console.log(Object['data'][random_track_index]['link']);
+
+    } catch {
+        console.log('Sorry, e cant find enough data for the language');
+    }
+
+    var obj = {
+        translation: ''
+    };
+
+    obj.translation = Object['data']['translations'][0]['translatedText']
+    var data = JSON.stringify(obj);
+
+    fs.writeFileSync('apiresp.json', data, finished);
+
+    function finished(err) {
+        console.log('ALL SET');
+    }
 }
 
 function translate_feature(labelArr, featureArr) {
@@ -283,18 +344,69 @@ function translate_feature(labelArr, featureArr) {
         console.log("error in API: ", e);
         process.exit(1)
     });
-}
 
-app.listen(3000);
-console.log('Server Stater on port 3000');
-module.exports = app;
+    function parse_corona(Object) {
 
-// Service Routes
-newsRoute(app);
-moviesRoute(app);
-curerencyRoute(app);
-weatherRoute(app);
-musicRoute(app);
-foodCalories(app);
-googleTranslate(app);
-airportSearch(app);
+        try {
+            random_track_index = Math.floor(Math.random() * Object['data'].length + 1);
+            console.log(Object['data'][random_track_index]['title']);
+            console.log(Object['data'][random_track_index]['link']);
+
+        } catch {
+            console.log('Sorry, e cant find enough data for the artist');
+        }
+
+        var obj = {
+            name: '',
+            url: ''
+        };
+
+        obj.name = Object['data'][random_track_index]['title'];
+        obj.url = Object['data'][random_track_index]['link'];
+        var data = JSON.stringify(obj);
+
+        fs.writeFileSync('apiresp.json', data, finished);
+
+        function finished(err) {
+            console.log('ALL SET');
+        }
+    }
+
+    function corona_feature(labelArr, featureArr) {
+        // Asuming that our service is running on https://www.ourservice.com
+        // This is how we can access our music-search feature in any node.js app
+        // Url as in documentation file 
+        var par = labelArr[0]['label'][0];
+
+        var url = `http://localhost:3000/coronavirusStatistics/search?q="=${par}`.replace(/\s/g, '');
+        http.get(url, function(response) {
+            var body = '';
+            response.on('data', function(chunk) {
+                body += chunk;
+            });
+            response.on('end', function() {
+                var jsonObj = JSON.parse(body);
+                parse_corona(jsonObj);
+                process.exit(1)
+
+                // Now data is ready in json obj use it whatever you want
+            });
+        }).on('error', function(e) {
+            console.log("error in API: ", e);
+            process.exit(1)
+        });
+    }
+
+    app.listen(3000);
+    console.log('Server Stater on port 3000');
+    module.exports = app;
+
+    // Service Routes
+    newsRoute(app);
+    moviesRoute(app);
+    curerencyRoute(app);
+    weatherRoute(app);
+    musicRoute(app);
+    foodCalories(app);
+    googleTranslate(app);
+    airportSearch(app);
