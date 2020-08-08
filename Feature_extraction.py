@@ -18,7 +18,6 @@ from nltk import RegexpParser
 from sklearn import tree
 from collections import Counter
 from wit import Wit
-from pandas import DataFrame
 import json
 import python_currency_dict
 
@@ -243,6 +242,24 @@ def f12(resp):
     except:
         return -1
 
+# airport
+def f13(resp): 
+    try:
+        # string
+        feature = resp['entities']['intent'][0]['value']
+        # string
+        param   = resp['entities']['country'][0]['value']
+        FP.feature_.append(feature)
+        FP.params_.append(param)
+
+        FP.feat_par_dict = {
+                     'feature': FP.feature_,
+                     'params': FP.params_
+                    }
+        return FP.feat_par_dict
+    except:
+        return -1
+
 # def f13(resp):
 #     try:
 #         feature = resp['entities']['intent'][0]['value']
@@ -296,6 +313,9 @@ def wit_ne(messsage):
         return(FP.feat_par_dict)
 
     elif f12(resp) != -1:
+        return(FP.feat_par_dict)
+
+    elif f13(resp) != -1:
         return(FP.feat_par_dict)
 
     else:
@@ -388,9 +408,9 @@ def clear(array):
 def clearDic(dict):
     dict = {}
 
-resp_test('send for amr diab')
+# resp_test('airports in egypt')
 # print(wit_ne('puzzle in Hindustani'))
-#param_plot(wit_ne("calories in pizza"))
+param_plot(wit_ne("bottle in french"))
 # a = Node('dummy', feature = 'music', type = 'parameter')
 # graph.create(a)
 
