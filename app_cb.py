@@ -1,4 +1,3 @@
-# This file handles the chatbot and reads the JSON file apiresp.json and runs the feature extraction code then sends it to the user
 import os
 import sys
 import Feature_extraction
@@ -12,6 +11,7 @@ from py2neo.ogm import GraphObject, Property
 from py2neo.data import Node, Relationship, Subgraph
 from py2neo.database import Cursor
 from py2neo.cypher import cypher_escape, cypher_repr
+import json
 
 graph = Graph("bolt://localhost:11002", auth=("neo4j", "password"))
 
@@ -38,33 +38,61 @@ def webhook():
 	
 	if data['object'] == 'page':
 		for entry in data['entry']:
-			for messaging_event in entry['messaging']:
-				#IDs
-				sender_id = messaging_event['sender']['id']
-				recipient_id = messaging_event['recipient']['id']
-				
-				if messaging_event.get('message'):
-					if 'text' in messaging_event['message']:
-						messaging_text = messaging_event['message']['text']
-					else:
-						messaging_text = 'no-text'
-					response = ''
-					try:
-						Feature_extraction.clear(Feature_extraction.FP.feature_)
-						Feature_extraction.clear(Feature_extraction.FP.params_)	
+    			
+				clear_nodes()
+				for messaging_event in entry['messaging']:
+					#IDs
+					sender_id = messaging_event['sender']['id']
+					recipient_id = messaging_event['recipient']['id']
+					
+					if messaging_event.get('message'):
+						if 'text' in messaging_event['message']:
+							messaging_text = messaging_event['message']['text']
+						else:
+							messaging_text = 'no-text'
+						response = ''
+
 						Feature_extraction.param_plot(Feature_extraction.wit_ne(messaging_text))
-						call(["node", "E:\College\Y4 T2\GP\env\messenger bot\AssBotWS-master/app.js"]) 
-						response = 'Everything is fine...'
-					except:
-						response = 'please be more specific'
-					
-					bot.send_text_message(sender_id, response)
-					Feature_extraction.clear(Feature_extraction.FP.feat_par_dict)
-					clear_nodes()	
-					
-					
-					
-	return "OK", 200
+						call(["node", "E:\College\Y4 T2\GP\env\messenger bot\AssBotWS-master/app_.js"])
+						
+						if send_message_music('apiresp.json') != -1:
+							response = send_message_music('apiresp.json')
+							
+						elif send_message_translate('apiresp.json') != -1:
+							response = send_message_translate('apiresp.json')
+									
+						# except:
+						# 	response = 'please be more specific'/
+							
+						bot.send_text_message(sender_id, response)
+
+						Feature_extraction.clear(Feature_extraction.FP.feat_par_dict)
+						clear_nodes()	
+						
+					break
+
+def send_message_music(filename):
+	try:
+		f = open(filename)
+		data = json.load(f) 
+		response = data['name']  + ' ' + data['url']
+		print("IT WORKS")
+		return response
+	except:
+		print('SEND MESSAGE MUSIC FUNCTION PROBLEM!!')
+		return -1
+
+def send_message_translate(filename):
+	try:
+		f = open(filename)
+		data = json.load(f) 
+		response = data['translation']
+		print("IT WORKS")
+		return response
+	except:
+		print('SEND MESSAGE translation FUNCTION PROBLEM!!')
+		return -1
+    	
 
 def log(message):
 	print(message)
