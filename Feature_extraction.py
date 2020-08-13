@@ -40,6 +40,7 @@ def resp_test(messsage):
     resp = client.message(messsage)
     print(resp)
 
+
 def lang_code(lang):
     f = open('E:\College\Y4 T2\GP\env\messenger bot\AssBotWS-master\langs.json')
     langs = json.load(f)
@@ -212,9 +213,28 @@ def f9(resp):
 def f11(resp):
     try:
         feature = resp['entities']['intent'][0]['value']
-        param1   = resp['entities']['targetlang'][0]['value']
-        param2   = resp['entities']['sentence'][0]['value']
+        param1  = resp['entities']['targetlang'][0]['value']
+        param2  = resp['entities']['sentence'][0]['value']
         
+        FP.feature_.append(feature)
+        FP.params_.append(lang_code(param1))
+        FP.params_.append(param2)
+
+        FP.feat_par_dict = {
+                     'feature': FP.feature_,
+                     'params': FP.params_
+                    }
+        return FP.feat_par_dict
+    except:
+        return -1
+
+# tanslate case 2
+def f15(resp):
+    try:
+        feature = resp['entities']['intent'][0]['value']
+        param2   = resp['entities']['sentence'][0]['value']
+        param1 = 'arabic'
+
         FP.feature_.append(feature)
         FP.params_.append(lang_code(param1))
         FP.params_.append(param2)
@@ -260,16 +280,31 @@ def f13(resp):
     except:
         return -1
 
-# def f13(resp):
+# corona case 1
+def f14(resp):
+    try:
+        feature = resp['entities']['coronavirus'][0]['value']
+        param   = resp['entities']['location'][0]['resolved']['values'][0]['name']
+        FP.feature_.append(feature)
+        FP.params_.append(param)
+
+        FP.feat_par_dict = {
+                    'feature': FP.feature_,
+                    'params': FP.params_
+                    }
+        return FP.feat_par_dict
+    except:
+        return -1
+
+# news 
+# def f15(resp):
 #     try:
 #         feature = resp['entities']['intent'][0]['value']
-#         param   = resp['entities']['food'][0]['value']
 #         FP.feature_.append(feature)
-#         FP.params_.append(param)
 
 #         FP.feat_par_dict = {
-#                      'feature': FP.feature_,
-#                      'params': FP.params_
+#                     'feature': FP.feature_,
+#                     'params': ''
 #                     }
 #         return FP.feat_par_dict
 #     except:
@@ -312,14 +347,22 @@ def wit_ne(messsage):
     elif f11(resp) != -1:
         return(FP.feat_par_dict)
 
+    elif f15(resp) != -1:
+        return(FP.feat_par_dict)
+
     elif f12(resp) != -1:
         return(FP.feat_par_dict)
 
     elif f13(resp) != -1:
         return(FP.feat_par_dict)
 
+    elif f14(resp) != -1:
+        return(FP.feat_par_dict)
+    
+    # elif f15(resp) != -1:
+    #     return(FP.feat_par_dict)
     else:
-        print('EVERY THING FAILED!!!!')
+        print('WIT Couldn not find the meaning of this')
         return -1
     
 
@@ -378,7 +421,10 @@ def param_plot(dict):
     FP.params_ = []
     FP.feat_par_dict = {}
     
-    feature_value = dict['feature'][0]
+    try:
+        feature_value = dict['feature'][0]
+    except:
+        return -1
     print("Feature extraction file, param plot function " + feature_value)
     print('PARAMS ARE ')
     print(dict['params'])
@@ -393,30 +439,12 @@ def param_plot(dict):
     print( dict['params'])
     print( FP.feat_par_dict)
 
-        
-        
-        # while matched_nodes.forward():
-        #     
-        #     print(type(matched_nodes.current))
-        #     #graph.create(r)
-
-    #print(matched_nodes)
-    
 def clear(array):
     array = []
 
 def clearDic(dict):
     dict = {}
 
-# resp_test('airports in egypt')
+# resp_test('fork in spanish')
 # print(wit_ne('puzzle in Hindustani'))
-param_plot(wit_ne("bottle in french"))
-# a = Node('dummy', feature = 'music', type = 'parameter')
-# graph.create(a)
-
-# def get_currencycode(dict, currencyname):
-#     for currencycode, currencyvalue in dict.items():
-#         if currencyname == currencyvalue:
-#             print(currencycode)
-
-# get_currencycode(python_currency_dict.currency_list, "Egypt Pound")
+# param_plot(wit_ne("fork in spanish"))
