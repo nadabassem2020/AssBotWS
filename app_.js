@@ -1,4 +1,3 @@
-//This file reads from the database and then send a request to the APIs then sends the response to a JSON file apiresp.json
 const express = require('express');
 const newsRoute = require('./src/routes/newsRoute');
 const moviesRoute = require('./src/routes/moviesRoute');
@@ -73,6 +72,7 @@ session
                 return music_feature(labelArr, featureArr);
             } catch {
                 console.log('We dont have enough data about the artist');
+                return -1;
 
             }
         } else if (featureArr[0]['feature'] == 'calorie') {
@@ -96,6 +96,33 @@ session
                 console.log('we dont have enough data about this language');
 
             }
+        } else if (featureArr[0]['feature'] == 'Corona') {
+            try {
+                return (corona_feature(labelArr, featureArr));
+            } catch {
+                console.log('we dont have enough data about this country');
+
+            }
+        } else if (featureArr[0]['feature'] == 'calculator') {
+            try {
+                return (calculator_feature(labelArr, featureArr));
+            } catch {
+                console.log('we dont have enough result');
+            }
+        } else if (featureArr[0]['feature'] == 'news') {
+            try {
+                return (calculator_feature(labelArr, featureArr));
+            } catch {
+                console.log('we dont have enough news');
+            }
+        } else if (featureArr[0]['feature'] == 'movies') {
+            try {
+                return (calculator_feature(labelArr, featureArr));
+            } catch {
+                console.log('we dont have enough data about this movie');
+            }
+        } else {
+            return -1;
         }
 
         // else if (featureArr[0]['feature'] == 'music'){
@@ -111,7 +138,16 @@ session
     console.log("error in reading the Database " + err);
     process.exit(1)
 
-});
+})
+
+.then(() => {
+        // Close the Session
+        return session.close();
+    })
+    .then(() => {
+        // Close the Driver
+        return driver.close();
+    });
 
 function parse_music(Object) {
 
@@ -146,7 +182,11 @@ function music_feature(labelArr, featureArr) {
     // Url as in documentation file 
     var par = labelArr[0]['label'][0];
 
-    var url = `http://localhost:3000/music/search?q=${par}`.replace(/\s/g, '');
+    try {
+        var url = `http://localhost:3000/music/search?q=${par}`.replace(/\s/g, '');
+    } catch {
+        return -1;
+    }
     http.get(url, function(response) {
         var body = '';
         response.on('data', function(chunk) {
@@ -182,12 +222,10 @@ function parse_calorie(Object) {
         fat_sat: 0,
         carbs: 0,
         protien: 0,
-        vitD: 0,
         cholestrol: 0,
         iron: 0,
         sodium: 0,
         pottassium: 0,
-        vit_c: 0
     };
 
     obj.energyCal = Object[random_food_index]['energy_kcal'];
@@ -195,12 +233,10 @@ function parse_calorie(Object) {
     obj.fat_sat = Object[random_food_index]['fa_sat'];
     obj.carbs = Object[random_food_index]['carbohydrt'];
     obj.protien = Object[random_food_index]['protien'];
-    obj.vitD = Object[random_food_index]['vit_d'];
     obj.cholestrol = Object[random_food_index]['cholestrl'];
     obj.iron = Object[random_food_index]['iron'];
     obj.sodium = Object[random_food_index]['sodium'];
     obj.pottassium = Object[random_food_index]['potassium'];
-    obj.vit_c = Object[random_food_index]['vit_c'];
 
     var data = JSON.stringify(obj);
 
@@ -344,69 +380,257 @@ function translate_feature(labelArr, featureArr) {
         console.log("error in API: ", e);
         process.exit(1)
     });
+}
 
-    function parse_corona(Object) {
+function parse_corona(Object) {
 
-        try {
-            random_track_index = Math.floor(Math.random() * Object['data'].length + 1);
-            console.log(Object['data'][random_track_index]['title']);
-            console.log(Object['data'][random_track_index]['link']);
+    try {
+        console.log(Object['data']['recovered']);
+        console.log(Object['data']['death']);
+        console.log(Object['data']['confirmed']);
 
-        } catch {
-            console.log('Sorry, e cant find enough data for the artist');
-        }
-
-        var obj = {
-            name: '',
-            url: ''
-        };
-
-        obj.name = Object['data'][random_track_index]['title'];
-        obj.url = Object['data'][random_track_index]['link'];
-        var data = JSON.stringify(obj);
-
-        fs.writeFileSync('apiresp.json', data, finished);
-
-        function finished(err) {
-            console.log('ALL SET');
-        }
+    } catch {
+        console.log('Sorry, e cant find enough data for the artist');
     }
 
-    function corona_feature(labelArr, featureArr) {
-        // Asuming that our service is running on https://www.ourservice.com
-        // This is how we can access our music-search feature in any node.js app
-        // Url as in documentation file 
-        var par = labelArr[0]['label'][0];
+    var obj = {
+        recovered: '',
+        death: '',
+        confirmed: ''
+    };
 
-        var url = `http://localhost:3000/coronavirusStatistics/search?q="=${par}`.replace(/\s/g, '');
-        http.get(url, function(response) {
-            var body = '';
-            response.on('data', function(chunk) {
-                body += chunk;
-            });
-            response.on('end', function() {
-                var jsonObj = JSON.parse(body);
-                parse_corona(jsonObj);
-                process.exit(1)
+    obj.recovered = Object['data']['recovered'];
+    obj.death = Object['data']['death'];
+    obj.confirmed = Object['data']['confirmed'];
+    var data = JSON.stringify(obj);
 
-                // Now data is ready in json obj use it whatever you want
-            });
-        }).on('error', function(e) {
-            console.log("error in API: ", e);
-            process.exit(1)
+    fs.writeFileSync('apiresp.json', data, finished);
+
+    function finished(err) {
+        console.log('ALL SET');
+    }
+}
+
+function corona_feature(labelArr, featureArr) {
+    // Asuming that our service is running on https://www.ourservice.com
+    // This is how we can access our music-search feature in any node.js app
+    // Url as in documentation file 
+    var par = labelArr[0]['label'][0];
+
+    var url = `http://localhost:3000/coronavirusStatistics/search?q=Egypt${par}`.replace(/\s/g, '');
+    http.get(url, function(response) {
+        var body = '';
+        response.on('data', function(chunk) {
+            body += chunk;
         });
+        response.on('end', function() {
+            var jsonObj = JSON.parse(body);
+            parse_corona(jsonObj);
+            process.exit(1)
+
+            // Now data is ready in json obj use it whatever you want
+        });
+    }).on('error', function(e) {
+        console.log("error in API: ", e);
+        process.exit(1)
+    });
+}
+
+function calculator_feature(labelArr, featureArr) {
+    // Asuming that our service is running on https://www.ourservice.com
+    // This is how we can access our calcolator-search feature in any node.js app
+    // Url as in documentation file 
+    var par = labelArr[0]['label'][0];
+
+    var url = `http://localhost:3000/calculator/search?exp=${par}`.replace(/\s/g, '');
+    http.get(url, function(response) {
+        var body = '';
+        response.on('data', function(chunk) {
+            body += chunk;
+        });
+        response.on('end', function() {
+            var jsonObj = JSON.parse(body);
+            parse_calculator(jsonObj);
+            process.exit(1)
+
+            // Now data is ready in json obj use it whatever you want
+        });
+    }).on('error', function(e) {
+        console.log("error in API: ", e);
+        process.exit(1)
+    });
+}
+
+function parse_calculator(Object) {
+
+    try {
+        console.log([0]).tostring;
+    } catch {
+        console.log('Sorry, e cant find the result');
     }
 
-    app.listen(3000);
-    console.log('Server Stater on port 3000');
-    module.exports = app;
+    var obj = {
+        num: '',
+    };
 
-    // Service Routes
-    newsRoute(app);
-    moviesRoute(app);
-    curerencyRoute(app);
-    weatherRoute(app);
-    musicRoute(app);
-    foodCalories(app);
-    googleTranslate(app);
-    airportSearch(app);
+    obj.num = console.log([0]);
+
+    var data = JSON.stringify(obj);
+
+    fs.writeFileSync('apiresp.json', data, finished);
+
+    function finished(err) {
+        console.log('ALL SET');
+    }
+}
+
+function parse_news(Object) {
+
+    try {
+
+
+    } catch {
+        console.log('Sorry, e cant find enough data for the artist');
+    }
+
+    var obj = {
+        titel: '',
+        description: '',
+        url: ''
+    };
+
+    obj.titel = Object['data'][random_track_index]['title'];
+    obj.url = Object['data'][random_track_index]['link'];
+    obj.daescription = Object['data'][random_track_index]['description'];
+    var data = JSON.stringify(obj);
+
+    fs.writeFileSync('apiresp.json', data, finished);
+
+    function finished(err) {
+        console.log('ALL SET');
+    }
+}
+
+function news_feature(labelArr, featureArr) {
+    // Asuming that our service is running on https://www.ourservice.com
+    // This is how we can access our news-search feature in any node.js app
+    // Url as in documentation file 
+
+    var url = `http://localhost:3000/news`;
+    http.get(url, function(response) {
+        var body = '';
+        response.on('data', function(chunk) {
+            body += chunk;
+        });
+        response.on('end', function() {
+            var jsonObj = JSON.parse(body);
+            parse_news(jsonObj);
+            process.exit(1)
+
+            // Now data is ready in json obj use it whatever you want
+        });
+    }).on('error', function(e) {
+        console.log("error in API: ", e);
+        process.exit(1)
+    });
+}
+
+function news_feature(labelArr, featureArr) {
+    // Asuming that our service is running on https://www.ourservice.com
+    // This is how we can access our news-search feature in any node.js app
+    // Url as in documentation file 
+    var par = labelArr[0]['label'][0];
+
+    var url = `http://localhost:3000/music/search?q=${par}`.replace(/\s/g, '');
+    http.get(url, function(response) {
+        var body = '';
+        response.on('data', function(chunk) {
+            body += chunk;
+        });
+        response.on('end', function() {
+            var jsonObj = JSON.parse(body);
+            parse_news(jsonObj);
+            process.exit(1)
+
+            // Now data is ready in json obj use it whatever you want
+        });
+    }).on('error', function(e) {
+        console.log("error in API: ", e);
+        process.exit(1)
+    });
+}
+
+function parse_movies(Object) {
+
+    try {
+
+
+    } catch {
+        console.log('Sorry, Not Enough Data');
+    }
+
+    var obj = {
+        name: '',
+        discription: ''
+    };
+
+    obj.name = Object['data'][random_track_index]['title'];
+    obj.description = Object['data'][random_track_index]['overiew'];
+    var data = JSON.stringify(obj);
+
+    fs.writeFileSync('apiresp.json', data, finished);
+
+    function finished(err) {
+        console.log('ALL SET');
+    }
+}
+
+function movies_feature(labelArr, featureArr) {
+    // Asuming that our service is running on https://www.ourservice.com
+    // This is how we can access our music-search feature in any node.js app
+    // Url as in documentation file 
+    var par = labelArr[0]['label'][0];
+
+    var url = `http://localhost:3000/movies/recommendations?id=${par}`.replace(/\s/g, '');
+    http.get(url, function(response) {
+        var body = '';
+        response.on('data', function(chunk) {
+            body += chunk;
+        });
+        response.on('end', function() {
+            var jsonObj = JSON.parse(body);
+            parse_Movies(jsonObj);
+            process.exit(1)
+
+            // Now data is ready in json obj use it whatever you want
+        });
+    }).on('error', function(e) {
+        console.log("error in API: ", e);
+        process.exit(1)
+    });
+
+}
+
+app.listen(3000);
+console.log('Server Stater on port 3000');
+module.exports = app;
+
+process.on('SIGTERM', () => {
+    console.info('SIGTERM signal received.');
+    console.log('Closing http server.');
+    server.close(() => {
+        console.log('Http server closed.');
+        // boolean means [force], see in mongoose doc
+
+    });
+});
+
+// Service Routes
+newsRoute(app);
+moviesRoute(app);
+curerencyRoute(app);
+weatherRoute(app);
+musicRoute(app);
+foodCalories(app);
+googleTranslate(app);
+airportSearch(app);
